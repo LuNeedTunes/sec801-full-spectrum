@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SEC+ 801 // Full Spectrum: every Security+ SY0-801 topic area as a game. Built for Meta Ray-Ban Display glasses, phones and desktops.">
+<meta name="mrbd-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<title>SEC+ 801 // Full Spectrum</title>
+<style>
+  /* Meta Ray-Ban Display ready: 600x600, black = see-through, no scrolling,
+     swipe = arrow keys (browser moves focus), pinch = Enter, Back = history. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+  body { display: flex; align-items: center; justify-content: center; color: #e4f6ff; font-family: "Courier New", ui-monospace, monospace; }
+  #app { width: min(600px, 100vw); height: min(600px, 100vh); padding: 14px; display: flex; flex-direction: column; overflow: hidden; }
+  .hud { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: #8ff; letter-spacing: .08em; text-transform: uppercase; }
+  h1 { font-size: 24px; margin: 6px 0 2px; color: #b388ff; text-shadow: 0 0 8px #b388ff; }
+  h2 { font-size: 19px; margin: 4px 0 6px; }
+  p { font-size: 17px; line-height: 1.38; margin: 4px 0; }
+  .tiny { font-size: 14px; color: #9de; }
+  button { font: inherit; }
+  .btn { background: #000; color: #8ff; border: 2px solid #8ff; border-radius: 6px; padding: 9px 13px; font-size: 15px; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+  button:focus, button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; box-shadow: 0 0 14px #fff8; }
+  button:disabled { cursor: default; }
+  .menu { display: grid; gap: 10px; margin-top: 12px; }
+  .mi { text-align: left; background: #000; border: 2px solid; border-radius: 8px; padding: 11px 14px; cursor: pointer; color: #e4f6ff; }
+  .mi b { display: block; font-size: 18px; }
+  .mi small { font-size: 14px; color: #9de; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .mod { text-align: left; background: #000; border: 2px solid; border-radius: 6px; padding: 7px 9px; font-size: 14px; line-height: 1.2; cursor: pointer; color: #e4f6ff; min-height: 52px; }
+  .mod i { font-style: normal; float: right; }
+  .card { border: 2px solid #8ff6; border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .opt { display: block; width: 100%; text-align: left; margin-top: 7px; background: #000; color: #e4f6ff; border: 2px solid #8ff8; border-radius: 6px; padding: 9px 12px; font-size: 16px; line-height: 1.25; cursor: pointer; }
+  .opt.good { border-color: #39ff14; color: #39ff14; }
+  .opt.bad { border-color: #ff2bd6; color: #ff2bd6; }
+  .opt.pick { border-color: #fff; color: #fff; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 8px; }
+  .bar { height: 7px; background: #8ff3; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg, #8ff, #b388ff); }
+  .fb { font-size: 15px; line-height: 1.3; margin: 0; }
+  .big { font-size: 46px; margin: 6px 0; }
+  .grow { flex: 1; min-height: 0; }
+</style>
+</head>
+<body>
+<main id="app" aria-label="Security+ SY0-801 Full Spectrum trainer"></main>
+<script>
+/* ===================== CONTENT =====================
+   Domains use the SY0-801 weights. Each module: n = name, t = [term, definition], q = [question, correct, wrong, wrong, wrong, why]. */
+const DOM = [
+ { name: "General Security Concepts", s: "GSC", w: 16, c: "#00e5ff", m: [
+  { n: "Security controls", t: [
+    ["Technical control", "Enforced by systems: firewalls, encryption, access control lists."],
+    ["Managerial control", "Administrative oversight: policies, risk assessments, security planning."],
+    ["Operational control", "Carried out by people day to day: guards, awareness training, procedures."],
+    ["Physical control", "Protects facilities and hardware: locks, fences, badge readers."],
+    ["Preventive", "Stops an incident before it happens, like a firewall rule or door lock."],
+    ["Detective", "Identifies an incident in progress or after it, like an IDS or log review."],
+    ["Corrective", "Restores systems after an incident, like restoring from backup or patching."],
+    ["Deterrent", "Discourages an attacker, like warning signs or visible cameras."],
+    ["Compensating", "An alternative control used when the primary control is not feasible."],
+    ["Directive", "Tells people what to do, like a policy or an 'authorized personnel only' sign."]],
+   q: [["A legacy system cannot be patched, so it is isolated on its own VLAN. What control type is the VLAN?", "Compensating", "Corrective", "Deterrent", "Directive", "It substitutes for the control (patching) that cannot be used."],
+       ["A security guard checking badges at the lobby is which control category?", "Operational", "Technical", "Managerial", "Physical", "Guards are people performing a process, so the category is operational; the function is preventive."]] },
+  { n: "Core concepts & AAA", t: [
+    ["Confidentiality", "Only authorized parties can read the data. Encryption and access controls support it."],
+    ["Integrity", "Data is accurate and unaltered. Hashing and digital signatures support it."],
+    ["Availability", "Systems and data are reachable when needed. Redundancy and backups support it."],
+    ["Non-repudiation", "A sender cannot credibly deny an action. Digital signatures provide it."],
+    ["Authentication", "Proving an identity is who it claims to be."],
+    ["Authorization", "Deciding what an authenticated identity is allowed to do."],
+    ["Accounting", "Recording what an identity did, such as logs and audit trails."],
+    ["Gap analysis", "Comparing current security posture against a target to find what is missing."]],
+   q: [["A user logs in, is allowed into the HR share, and the access is logged. Which order of AAA does this show?", "Authentication, authorization, accounting", "Authorization, authentication, accounting", "Accounting, authentication, authorization", "Authentication, accounting, authorization", "Prove identity, grant rights, then record activity."],
+       ["Which mainly provides non-repudiation?", "Digital signature", "Symmetric encryption", "RAID 5", "Load balancer", "Only the private key holder could have produced the signature."]] },
+  { n: "Zero trust", t: [
+    ["Zero trust", "Never trust by network location; verify every request explicitly."],
+    ["Control plane", "Makes access decisions: the policy engine and policy administrator."],
+    ["Data plane", "Carries traffic and enforces decisions through the policy enforcement point."],
+    ["Policy engine", "Evaluates identity, device and context to decide allow or deny."],
+    ["Policy enforcement point", "Gatekeeper in the data path that allows or blocks the session."],
+    ["Adaptive identity", "Authentication that changes with risk signals like location or device health."],
+    ["Threat scope reduction", "Limiting what any one identity can reach to shrink the blast radius."],
+    ["Implicit trust zone", "Area past the enforcement point where resources are reachable once allowed."]],
+   q: [["In zero trust, which component actually allows or blocks the connection?", "Policy enforcement point", "Policy engine", "Policy administrator", "Certificate authority", "The PEP sits in the data plane and enforces the decision."],
+       ["A login from a new country triggers an extra MFA prompt. Which zero trust idea is this?", "Adaptive identity", "Implicit trust", "Separation of duties", "Data sovereignty", "Authentication adapts to risk context."]] },
+  { n: "Physical security & deception", t: [
+    ["Bollards", "Short posts that stop vehicles from reaching a building entrance."],
+    ["Access control vestibule", "Two-door entry (mantrap) that lets one person through at a time."],
+    ["Honeypot", "A decoy system that attracts attackers so their activity can be studied."],
+    ["Honeynet", "A network of decoy systems."],
+    ["Honeyfile", "A decoy file that alerts when someone opens it."],
+    ["Honeytoken", "Fake data, like a bogus credential, that alerts when used."],
+    ["Infrared sensor", "Detects body heat to sense movement."],
+    ["Microwave sensor", "Detects motion by bouncing microwave signals over a wide area."]],
+   q: [["A fake AWS key is planted in a code repo and triggers an alert when used. What is it?", "Honeytoken", "Honeypot", "Honeynet", "Canary deployment", "Honeytokens are fake data, not fake systems."],
+       ["Which stops tailgating at a data center door?", "Access control vestibule", "Bollards", "Fencing", "Lighting", "The vestibule admits one person at a time."]] },
+  { n: "Change management", t: [
+    ["Approval process", "Changes are reviewed and approved, often by a change advisory board, before work starts."],
+    ["Impact analysis", "Assesses what a change could affect before it is made."],
+    ["Backout plan", "Steps to roll back if the change fails."],
+    ["Maintenance window", "Scheduled time to make changes with the least business impact."],
+    ["Standard operating procedure", "Documented steps for routine, pre-approved work."],
+    ["Allow list / deny list", "Technical lists that a change may need to update so new software can run."],
+    ["Dependencies", "Services or systems that rely on the changed item and may break."],
+    ["Version control", "Tracks revisions to code, configs and docs so changes can be traced and reverted."]],
+   q: [["A firewall upgrade fails at 2 a.m. What should the team follow?", "The backout plan", "The impact analysis", "The SLA", "The acceptable use policy", "The backout plan restores the prior state."],
+       ["Restarting a database service unexpectedly breaks the web app. What was missed?", "Dependencies", "Maintenance window", "Ownership", "Legacy applications", "The web app depended on the database."]] },
+  { n: "Encryption & keys", t: [
+    ["Symmetric encryption", "One shared key encrypts and decrypts. Fast; AES is the standard example."],
+    ["Asymmetric encryption", "Public and private key pair. RSA and ECC; used for key exchange and signatures."],
+    ["AES", "Symmetric block cipher with 128, 192 or 256-bit keys."],
+    ["Diffie-Hellman", "Lets two parties agree on a shared secret over an untrusted network."],
+    ["Full-disk encryption", "Encrypts an entire drive, protecting data at rest if a device is stolen."],
+    ["TPM", "Chip on the motherboard that stores keys and supports secure boot and disk encryption."],
+    ["HSM", "Dedicated hardware device that securely generates and stores keys at scale."],
+    ["Key escrow", "A trusted third party holds a copy of keys for recovery."],
+    ["Secure enclave", "Isolated processor area that protects keys and sensitive operations."]],
+   q: [["Bob must send Alice a file only she can open. Which key encrypts it?", "Alice's public key", "Alice's private key", "Bob's private key", "Bob's public key", "Encrypt with the recipient's public key; only her private key decrypts."],
+       ["A laptop is stolen. Which control best protects the data on it?", "Full-disk encryption", "Hashing", "Obfuscation", "Steganography", "FDE protects data at rest."]] },
+  { n: "PKI & certificates", t: [
+    ["Certificate authority", "Trusted entity that issues and signs digital certificates."],
+    ["CSR", "Certificate signing request sent to a CA, containing the public key."],
+    ["CRL", "Certificate revocation list: a published list of revoked certificates."],
+    ["OCSP", "Online certificate status protocol: real-time check of one certificate's status."],
+    ["Wildcard certificate", "Covers all subdomains of a domain, like *.example.com."],
+    ["Self-signed certificate", "Signed by its own key, not a CA. Not trusted by default."],
+    ["Root of trust", "The top trusted anchor, such as a root CA, that the chain builds on."],
+    ["Certificate pinning", "An app only accepts a specific certificate or key, blocking substitutes."]],
+   q: [["A browser needs to check right now whether one certificate was revoked. What does it use?", "OCSP", "CRL", "CSR", "Key escrow", "OCSP gives real-time status for a single certificate."],
+       ["One certificate must secure mail.example.com, www.example.com and vpn.example.com. Best option?", "Wildcard certificate", "Self-signed certificate", "Root certificate", "Code-signing certificate", "A wildcard covers every subdomain."]] },
+  { n: "Hashing, signatures & obfuscation", t: [
+    ["Hashing", "One-way function producing a fixed-length digest. Proves integrity; SHA-256 is common."],
+    ["Salting", "Adding random data to a password before hashing to defeat rainbow tables."],
+    ["Key stretching", "Repeatedly hashing to slow brute force, as in PBKDF2 or bcrypt."],
+    ["Digital signature", "Hash encrypted with the sender's private key; proves integrity, origin and non-repudiation."],
+    ["Steganography", "Hiding data inside other data, such as an image."],
+    ["Tokenization", "Replacing sensitive data with a token that maps back to it in a secure vault."],
+    ["Data masking", "Hiding part of data, like showing only the last four digits of a card."],
+    ["Blockchain", "Distributed, append-only ledger where each block is chained by hashes."]],
+   q: [["Two users have the same password but different stored hashes. Why?", "Salting", "Key escrow", "Tokenization", "Steganography", "A unique salt changes each hash."],
+       ["A payment system swaps card numbers for random values stored in a vault. What is this?", "Tokenization", "Hashing", "Masking", "Encryption", "Tokens map back to the real data in the vault."]] }
+ ]},
+ { name: "Threats, Vulnerabilities & Attacks", s: "THREAT", w: 24, c: "#ff2bd6", m: [
+  { n: "Threat actors & motivations", t: [
+    ["Nation-state", "Government-backed actor with high resources; espionage and long-term APTs."],
+    ["Organized crime", "Profit-driven groups behind ransomware and fraud."],
+    ["Hacktivist", "Attacks to promote a political or social cause."],
+    ["Insider threat", "Current or former employee or contractor misusing legitimate access."],
+    ["Unskilled attacker", "Low-skill actor using others' tools and scripts."],
+    ["Shadow IT", "Systems or services used without IT approval, creating unmanaged risk."],
+    ["APT", "Advanced persistent threat: stealthy, long-term intrusion, usually nation-state."],
+    ["Data exfiltration", "Motivation and act of stealing data out of an organization."]],
+   q: [["A departing engineer copies source code to a personal drive. Which actor?", "Insider threat", "Hacktivist", "Nation-state", "Unskilled attacker", "They abused legitimate access."],
+       ["A group defaces a site to protest a company's policy. Which actor?", "Hacktivist", "Organized crime", "APT", "Shadow IT", "Motivation is ideological."]] },
+  { n: "Threat vectors & attack surfaces", t: [
+    ["Message-based vector", "Email, SMS or instant messages used to deliver attacks."],
+    ["Removable media", "USB drives and similar devices used to bring in malware."],
+    ["Unsupported systems", "End-of-life software with no patches, an easy target."],
+    ["Open service ports", "Listening services that expand the attack surface."],
+    ["Default credentials", "Factory usernames and passwords that were never changed."],
+    ["Supply chain", "Attacks through vendors, MSPs or compromised software updates."],
+    ["Watering hole", "Compromising a site the target group is known to visit."],
+    ["Typosquatting", "Registering misspelled domains to catch users who mistype."]],
+   q: [["Attackers compromise a vendor's update server to push malware to its customers. What vector?", "Supply chain", "Watering hole", "Typosquatting", "Removable media", "The attack rides a trusted vendor."],
+       ["A new IP camera still uses admin/admin. What is the vulnerability?", "Default credentials", "Zero-day", "Race condition", "Misconfigured DNS", "Factory credentials were never changed."]] },
+  { n: "Social engineering", t: [
+    ["Phishing", "Fraudulent email that lures users into giving credentials or opening malware."],
+    ["Spear phishing", "Phishing aimed at a specific person or group."],
+    ["Whaling", "Phishing aimed at executives."],
+    ["Vishing", "Voice phishing over phone calls."],
+    ["Smishing", "Phishing over SMS text messages."],
+    ["Pretexting", "Inventing a believable scenario to get information."],
+    ["Business email compromise", "Using a real or spoofed business account to trick staff into payments."],
+    ["Impersonation", "Pretending to be someone trusted, like IT support or a vendor."],
+    ["Tailgating", "Following an authorized person through a secured door."]],
+   q: [["The CFO gets a tailored email asking to approve an urgent wire. Best term?", "Whaling", "Vishing", "Smishing", "Typosquatting", "Phishing aimed at an executive is whaling."],
+       ["A caller claims to be from the help desk and asks for your MFA code. What is this?", "Vishing", "Smishing", "Tailgating", "Watering hole", "Voice-based social engineering."]] },
+  { n: "Malware", t: [
+    ["Ransomware", "Encrypts data and demands payment for the key."],
+    ["Trojan", "Malware disguised as legitimate software."],
+    ["Worm", "Self-replicating malware that spreads across networks without user action."],
+    ["Spyware", "Secretly monitors activity and collects information."],
+    ["Rootkit", "Hides deep in the OS to keep privileged access and conceal itself."],
+    ["Logic bomb", "Code that runs when a condition is met, like a date or an account removal."],
+    ["Keylogger", "Records keystrokes to capture passwords and data."],
+    ["Fileless malware", "Runs in memory using legitimate tools like PowerShell, leaving little on disk."],
+    ["Bloatware", "Unneeded preinstalled software that widens the attack surface."]],
+   q: [["Malicious code deletes payroll data the day an admin's account is disabled. What is it?", "Logic bomb", "Worm", "Trojan", "Rootkit", "Triggered by a condition."],
+       ["Malware spreads from host to host across the LAN with no user clicks. What is it?", "Worm", "Trojan", "Spyware", "Keylogger", "Worms self-replicate."]] },
+  { n: "Application & web attacks", t: [
+    ["SQL injection", "Inserting SQL into input fields to read or change a database."],
+    ["Cross-site scripting", "Injecting script into a site so it runs in other users' browsers."],
+    ["Buffer overflow", "Writing past a memory buffer to crash a program or run code."],
+    ["Race condition", "Flaw when timing between events changes the outcome, like TOCTOU."],
+    ["Privilege escalation", "Gaining higher rights than granted."],
+    ["Directory traversal", "Using ../ sequences to reach files outside the web root."],
+    ["Replay attack", "Capturing and resending valid data, like an authentication token."],
+    ["Forgery (CSRF)", "Tricking a logged-in user's browser into sending an unwanted request."]],
+   q: [["A login field accepts ' OR 1=1 -- and logs the attacker in. What attack?", "SQL injection", "Cross-site scripting", "Directory traversal", "Buffer overflow", "SQL syntax was injected."],
+       ["Which control best prevents injection attacks?", "Input validation", "Full-disk encryption", "Load balancing", "Geofencing", "Validate and sanitize all input; use parameterized queries."]] },
+  { n: "Network & password attacks", t: [
+    ["DDoS", "Many systems flood a target to make it unavailable."],
+    ["Amplified DDoS", "Small requests trigger large responses aimed at the victim, as with DNS amplification."],
+    ["On-path attack", "Attacker sits between two parties to intercept or alter traffic."],
+    ["DNS poisoning", "Corrupting DNS data so users resolve to malicious IPs."],
+    ["Credential replay", "Reusing captured credentials or hashes, like pass-the-hash."],
+    ["Password spraying", "One common password tried against many accounts to avoid lockouts."],
+    ["Brute force", "Trying every possible password combination."],
+    ["Wireless evil twin", "Rogue access point that copies a legitimate SSID."]],
+   q: [["Logs show 'Winter2026!' tried once against 800 accounts. What attack?", "Password spraying", "Brute force", "Credential stuffing", "Replay", "One password, many accounts."],
+       ["A coffee shop has two 'CafeWiFi' networks and one steals logins. What is it?", "Evil twin", "Bluejacking", "War driving", "DNS poisoning", "A rogue AP copying a real SSID."]] },
+  { n: "Vulnerability types", t: [
+    ["Zero-day", "A vulnerability with no vendor patch available yet."],
+    ["Misconfiguration", "Insecure settings, like open storage buckets or default accounts."],
+    ["VM escape", "Breaking out of a virtual machine to reach the host or other VMs."],
+    ["Jailbreaking", "Removing restrictions on a mobile OS, weakening its security."],
+    ["Sideloading", "Installing apps from outside the official app store."],
+    ["Firmware vulnerability", "Flaws in low-level device software, often hard to patch."],
+    ["End-of-life", "Hardware or software the vendor no longer supports or patches."],
+    ["Memory injection", "Placing malicious code into another process's memory."]],
+   q: [["An attacker breaks out of a guest VM and accesses the hypervisor. What is this?", "VM escape", "Sideloading", "Jailbreaking", "Resource reuse", "Escaping the VM isolation boundary."],
+       ["A cloud storage bucket is set to public by mistake. What vulnerability type?", "Misconfiguration", "Zero-day", "Race condition", "Firmware", "Insecure settings, not a code flaw."]] },
+  { n: "AI-enabled threats", t: [
+    ["Prompt injection", "Hidden or crafted input that makes an AI model ignore its instructions."],
+    ["Data poisoning", "Corrupting training data so a model learns wrong or malicious behavior."],
+    ["Model inversion", "Querying a model to reconstruct sensitive training data."],
+    ["Deepfake", "AI-generated audio or video impersonating a real person."],
+    ["AI-generated phishing", "Fluent, personalized lures written at scale by AI."],
+    ["Model theft", "Stealing or cloning a proprietary AI model."],
+    ["Excessive agency", "Giving an AI agent more permissions or tools than its task needs."],
+    ["Guardrails", "Controls that filter AI inputs and outputs to enforce safe behavior."]],
+   q: [["A web page contains hidden text telling an AI assistant to email the user's files. What attack?", "Prompt injection", "Data poisoning", "Model inversion", "Model theft", "Crafted input overrides the model's instructions."],
+       ["A finance clerk gets a video call from a 'CEO' who looks and sounds real, asking for a transfer. What threat?", "Deepfake", "Smishing", "Typosquatting", "Logic bomb", "AI-generated impersonation."]] },
+  { n: "Mitigation techniques", t: [
+    ["Segmentation", "Dividing a network so a breach in one zone cannot spread easily."],
+    ["Least privilege", "Grant only the access a job needs."],
+    ["Application allow list", "Only approved software may run."],
+    ["Patching", "Applying vendor fixes to close known vulnerabilities."],
+    ["Hardening", "Removing unneeded services, ports and accounts to shrink attack surface."],
+    ["Isolation", "Moving a compromised system away from the network to contain it."],
+    ["Encryption", "Protecting data so it is unreadable without the key."],
+    ["Monitoring", "Watching systems and logs to detect suspicious activity."]],
+   q: [["Users keep running unapproved software. Strongest technical fix?", "Application allow list", "Acceptable use policy", "Awareness training", "Deny list of known malware", "Only approved programs can execute."],
+       ["A host shows signs of compromise. What should happen first?", "Isolation", "Reimaging", "Patching", "Decommissioning", "Contain before eradicating."]] }
+ ]},
+ { name: "Security Architecture", s: "ARCH", w: 19, c: "#39ff14", m: [
+  { n: "Architecture models", t: [
+    ["IaaS", "Provider runs hardware; you manage OS, apps and data."],
+    ["PaaS", "Provider runs the platform; you manage your apps and data."],
+    ["SaaS", "Provider runs the whole application; you manage users and data."],
+    ["Shared responsibility", "Splits security duties between cloud provider and customer by service model."],
+    ["Infrastructure as code", "Defining infrastructure in config files for repeatable, consistent builds."],
+    ["Serverless", "Code runs as functions; provider manages servers entirely."],
+    ["Microservices", "App built from small independent services that communicate over APIs."],
+    ["ICS/SCADA", "Systems that control industrial processes; often legacy and hard to patch."],
+    ["Air gap", "Physical separation of a network from all others."],
+    ["RTOS / embedded", "Purpose-built systems with limited resources and patching options."]],
+   q: [["You patch the guest OS on your cloud VMs. Which model are you using?", "IaaS", "SaaS", "PaaS", "Serverless", "In IaaS the customer owns the OS."],
+       ["Every server is built from the same template file to avoid drift. What is this?", "Infrastructure as code", "Microservices", "Air gap", "Containerization", "IaC gives repeatable builds."]] },
+  { n: "Secure network infrastructure", t: [
+    ["Screened subnet (DMZ)", "Zone between internet and internal network for public-facing servers."],
+    ["NGFW", "Next-generation firewall: inspects applications and content, not just ports."],
+    ["WAF", "Web application firewall that filters HTTP to block attacks like SQLi and XSS."],
+    ["IDS vs IPS", "IDS detects and alerts; IPS sits inline and blocks."],
+    ["Jump server", "Hardened host used as the only path to administer internal systems."],
+    ["Proxy server", "Makes requests on behalf of clients; can filter and cache."],
+    ["NAC / 802.1X", "Port-based access control that authenticates devices before network access."],
+    ["Fail-open vs fail-closed", "On failure, traffic is allowed (open) or blocked (closed)."],
+    ["SD-WAN", "Software-defined WAN that steers traffic across multiple links."],
+    ["SASE", "Cloud-delivered networking plus security (SWG, CASB, ZTNA) at the edge."]],
+   q: [["A device must block attacks inline, not just alert. Which?", "IPS", "IDS", "SIEM", "NetFlow collector", "The IPS sits inline and blocks."],
+       ["Admins must reach internal servers only through one hardened host. What is it?", "Jump server", "Proxy server", "Load balancer", "Honeypot", "A jump server centralizes admin access."]] },
+  { n: "Data protection", t: [
+    ["Data at rest", "Stored data on disks, databases or backups."],
+    ["Data in transit", "Data moving across a network; protect with TLS or IPsec."],
+    ["Data in use", "Data being processed in memory."],
+    ["Data sovereignty", "Data is subject to the laws of the country where it is stored."],
+    ["Classification", "Labeling data, such as public, sensitive, confidential, restricted."],
+    ["Geofencing", "Restricting access based on physical location."],
+    ["Regulated data", "Data with legal protections, like PII, PHI or cardholder data."],
+    ["Segmentation of data", "Separating sensitive data from other data to limit exposure."]],
+   q: [["An EU company must keep customer data on servers inside the EU. What concept?", "Data sovereignty", "Data masking", "Geofencing", "Tokenization", "Location determines the governing law."],
+       ["TLS protects data in which state?", "In transit", "At rest", "In use", "Archived", "TLS encrypts network traffic."]] },
+  { n: "Resilience & recovery", t: [
+    ["High availability", "Designing systems to stay up, often with clustering and load balancing."],
+    ["Hot site", "Fully equipped, ready-to-run backup site; fastest and most costly."],
+    ["Warm site", "Partially equipped site; needs some setup and data."],
+    ["Cold site", "Space and power only; slowest and cheapest."],
+    ["RTO", "Recovery time objective: maximum acceptable downtime."],
+    ["RPO", "Recovery point objective: maximum acceptable data loss, measured in time."],
+    ["Snapshot", "Point-in-time copy of a system or VM."],
+    ["UPS vs generator", "UPS gives short-term battery power; generator supplies long outages."],
+    ["Tabletop exercise", "Discussion-based walk-through of a disaster scenario."],
+    ["Failover", "Automatic switch to a standby system when the primary fails."]],
+   q: [["The business can lose at most 4 hours of data. Which metric is that?", "RPO", "RTO", "MTTR", "MTBF", "RPO is about data loss."],
+       ["You need operations back within minutes after a disaster, regardless of cost. Which site?", "Hot site", "Warm site", "Cold site", "Mobile site", "Hot sites are ready immediately."]] }
+ ]},
+ { name: "Security Operations", s: "OPS", w: 27, c: "#ffe600", m: [
+  { n: "Baselines & hardening", t: [
+    ["Secure baseline", "Approved standard configuration that systems are built and measured against."],
+    ["CIS benchmarks", "Widely used hardening guides for operating systems and apps."],
+    ["Disable unused ports", "Turning off unneeded services and switch ports to reduce attack surface."],
+    ["Host-based firewall", "Firewall running on the endpoint itself."],
+    ["Secure boot", "Only signed, trusted code loads during startup."],
+    ["Configuration drift", "Systems slowly changing away from the baseline over time."],
+    ["Patch management", "Testing and deploying updates on a regular schedule."],
+    ["Default password change", "Replacing factory credentials before deployment."]],
+   q: [["Months after deployment, servers no longer match the approved config. What is this?", "Configuration drift", "Zero-day", "Shadow IT", "Privilege creep", "They drifted from the baseline."],
+       ["What ensures only trusted code runs during startup?", "Secure boot", "Full-disk encryption", "Host firewall", "Sandboxing", "Secure boot verifies signatures."]] },
+  { n: "Wireless & mobile security", t: [
+    ["WPA3", "Current Wi-Fi security standard using SAE instead of a pre-shared key handshake."],
+    ["SAE", "Simultaneous authentication of equals; resists offline password cracking."],
+    ["RADIUS", "Central authentication server used with WPA3-Enterprise and 802.1X."],
+    ["EAP", "Extensible authentication protocol framework used in enterprise Wi-Fi."],
+    ["MDM", "Mobile device management: enforces policies, pushes apps, can remote-wipe."],
+    ["BYOD", "Employees use personal devices for work."],
+    ["COPE", "Corporate-owned, personally enabled devices."],
+    ["Site survey / heat map", "Mapping signal strength to place access points well."]],
+   q: [["Which Wi-Fi feature defeats offline dictionary attacks on the handshake?", "SAE in WPA3", "WPS", "WEP", "MAC filtering", "SAE replaced the WPA2 PSK handshake."],
+       ["A company needs to remote-wipe lost phones. Which tool?", "MDM", "SIEM", "NAC", "WAF", "MDM enforces mobile policy."]] },
+  { n: "Asset management", t: [
+    ["Asset inventory", "Tracked list of hardware, software and data the organization owns."],
+    ["Ownership", "Assigning a responsible owner to each asset."],
+    ["Classification", "Rating assets by sensitivity and importance."],
+    ["Sanitization", "Removing data so it cannot be recovered before reuse or disposal."],
+    ["Destruction", "Physically destroying media: shredding, pulverizing, degaussing."],
+    ["Certificate of destruction", "Document proving media was destroyed by a vendor."],
+    ["Data retention", "Keeping data for a required period, then disposing of it."],
+    ["Acquisition process", "Secure procurement of new assets, including vendor review."]],
+   q: [["A vendor shreds old drives. What should you get from them?", "Certificate of destruction", "SLA", "MOU", "Chain of custody", "It proves the media was destroyed."],
+       ["Drives will be reused in another department. What must happen first?", "Sanitization", "Destruction", "Classification", "Encryption", "Wipe them so no data can be recovered."]] },
+  { n: "Vulnerability management", t: [
+    ["Vulnerability scan", "Automated check for known weaknesses."],
+    ["Credentialed scan", "Scan that logs in for a deeper, more accurate view."],
+    ["CVE", "Common vulnerabilities and exposures: public ID for a known flaw."],
+    ["CVSS", "Common vulnerability scoring system: 0 to 10 severity score."],
+    ["False positive", "Scanner reports a vulnerability that is not really there."],
+    ["False negative", "A real vulnerability the scanner missed."],
+    ["Exception", "Formally accepting a vulnerability that will not be fixed, with approval."],
+    ["Rescan / validation", "Scanning again to confirm a fix worked."],
+    ["Threat feed / OSINT", "External intelligence about threats, often public sources."],
+    ["Bug bounty", "Paying outside researchers to report vulnerabilities."]],
+   q: [["After patching, how do you confirm the fix?", "Rescan to validate", "Lower the CVSS score", "File an exception", "Buy insurance", "Validation proves remediation."],
+       ["A scan flags a flaw for software that is not installed. What is this?", "False positive", "False negative", "True positive", "Zero-day", "Reported but not real."]] },
+  { n: "Monitoring & alerting", t: [
+    ["SIEM", "Collects, correlates and alerts on logs from many sources."],
+    ["Log aggregation", "Bringing logs into one place for analysis."],
+    ["SCAP", "Standards for automating configuration and vulnerability checks."],
+    ["NetFlow", "Records metadata about network flows: who talked to whom, how much."],
+    ["DLP", "Data loss prevention: detects and blocks sensitive data leaving."],
+    ["SNMP traps", "Alerts sent by network devices to a monitoring system."],
+    ["Alert tuning", "Adjusting rules to cut false positives and noise."],
+    ["Quarantine", "Isolating a suspicious file or host."]],
+   q: [["An employee emails a spreadsheet of SSNs to a personal address and it is blocked. Which tool?", "DLP", "SIEM", "IPS", "NetFlow", "DLP blocks sensitive data leaving."],
+       ["Analysts are buried in false alerts. What helps most?", "Alert tuning", "More log sources", "Disabling the SIEM", "Longer retention", "Tune rules to reduce noise."]] },
+  { n: "Enterprise security tools", t: [
+    ["EDR", "Endpoint detection and response: monitors endpoints and can isolate them."],
+    ["XDR", "Extended detection and response across endpoints, network, cloud and email."],
+    ["UBA", "User behavior analytics: flags activity that differs from a user's normal pattern."],
+    ["SPF", "DNS record listing which servers may send mail for a domain."],
+    ["DKIM", "Signs outgoing email so receivers can verify it was not altered."],
+    ["DMARC", "Policy telling receivers what to do when SPF/DKIM fail, plus reporting."],
+    ["DNS filtering", "Blocks lookups of known malicious domains."],
+    ["Secure protocols", "Replacing insecure ones: SSH not Telnet, SFTP not FTP, HTTPS not HTTP."],
+    ["Web filter", "Blocks sites by category, reputation or URL."]],
+   q: [["Receivers should reject mail that fails SPF and DKIM for your domain. What sets that policy?", "DMARC", "SPF", "DKIM", "S/MIME", "DMARC defines the action and reporting."],
+       ["Which protocol should replace Telnet?", "SSH", "FTP", "SNMPv1", "HTTP", "SSH encrypts remote sessions."]] },
+  { n: "Identity & access management", t: [
+    ["MFA", "Two or more different factor types: know, have, are, somewhere you are."],
+    ["SSO", "One login grants access to many systems."],
+    ["Federation", "Trusting identities from another organization, often with SAML."],
+    ["SAML", "XML standard for exchanging authentication between identity and service providers."],
+    ["OAuth / OpenID Connect", "OAuth grants delegated authorization; OIDC adds authentication on top."],
+    ["RBAC", "Access based on job role."],
+    ["ABAC", "Access based on attributes like department, time or device."],
+    ["Mandatory access control", "Labels and clearances set by the system, not the owner."],
+    ["PAM", "Privileged access management: vaults admin credentials, just-in-time access."],
+    ["Provisioning / deprovisioning", "Creating accounts when people join and removing them when they leave."]],
+   q: [["A password plus a PIN is how many factor types?", "One", "Two", "Three", "Zero", "Both are something you know."],
+       ["Admins check out short-lived admin credentials from a vault. What is this?", "PAM", "SSO", "Federation", "RBAC", "Privileged access management."]] },
+  { n: "Automation & orchestration", t: [
+    ["SOAR", "Security orchestration, automation and response: runs playbooks automatically."],
+    ["Playbook", "Defined steps for responding to a specific type of incident."],
+    ["Guardrails", "Automated checks that block insecure configurations."],
+    ["Ticket automation", "Creating and routing tickets automatically from alerts."],
+    ["Benefit: speed", "Automation responds faster and more consistently than people."],
+    ["Risk: single point of failure", "A broken automation can fail everywhere at once."],
+    ["Risk: complexity", "Automations are hard to maintain and can hide errors."],
+    ["Technical debt", "Shortcuts that make future changes costly."]],
+   q: [["A phishing alert automatically blocks the sender and opens a ticket. What tool?", "SOAR", "DLP", "NAC", "CASB", "SOAR runs automated playbooks."],
+       ["Which is a known risk of heavy automation?", "Single point of failure", "Slower response", "Less consistency", "More manual tickets", "One bad script can break everything."]] },
+  { n: "Incident response", t: [
+    ["Preparation", "Plans, tools, training and contacts ready before an incident."],
+    ["Detection", "Identifying that an incident is happening."],
+    ["Analysis", "Determining scope, cause and impact."],
+    ["Containment", "Limiting the spread, like isolating hosts."],
+    ["Eradication", "Removing the cause, such as malware or attacker access."],
+    ["Recovery", "Restoring systems to normal operation."],
+    ["Lessons learned", "Reviewing what happened to improve next time."],
+    ["Root cause analysis", "Finding the underlying reason an incident happened."],
+    ["Threat hunting", "Proactively searching for threats that evaded detection."]],
+   q: [["What comes right after containment?", "Eradication", "Recovery", "Detection", "Lessons learned", "Contain, eradicate, recover."],
+       ["A team reviews an incident to update playbooks. Which phase?", "Lessons learned", "Preparation", "Analysis", "Containment", "Post-incident review."]] },
+  { n: "Digital forensics & data sources", t: [
+    ["Chain of custody", "Record of everyone who handled evidence and when."],
+    ["Legal hold", "Order to preserve data relevant to litigation."],
+    ["Order of volatility", "Collect most volatile first: CPU cache, RAM, then disk, then archives."],
+    ["Acquisition", "Making a forensic copy, often a bit-by-bit image."],
+    ["Hashing evidence", "Hashing images to prove they were not altered."],
+    ["E-discovery", "Finding and producing electronic data for legal cases."],
+    ["Packet capture", "Full copy of network traffic for analysis."],
+    ["Metadata", "Data about data, like email headers or file timestamps."]],
+   q: [["Which should you collect first from a live system?", "RAM contents", "Hard drive image", "Backup tapes", "Printed logs", "Memory is the most volatile."],
+       ["What proves an evidence image was not changed?", "Matching hash values", "Chain of custody form", "Legal hold", "Metadata", "Same hash before and after."]] }
+ ]},
+ { name: "Security Program Management & Oversight", s: "GRC", w: 14, c: "#ff8a00", m: [
+  { n: "Security governance", t: [
+    ["Policy", "High-level statement of management intent."],
+    ["Standard", "Mandatory, specific requirement that supports a policy."],
+    ["Procedure", "Step-by-step instructions to perform a task."],
+    ["Guideline", "Recommended practice; optional."],
+    ["Acceptable use policy", "Rules for how users may use company systems."],
+    ["Data owner", "Senior person accountable for a data set and its classification."],
+    ["Data custodian", "Handles day-to-day protection of data, like backups."],
+    ["Data controller vs processor", "Controller decides why data is processed; processor handles it on their behalf."]],
+   q: [["'All laptops must use AES-256 full-disk encryption.' What document type is this?", "Standard", "Policy", "Guideline", "Procedure", "Mandatory and specific."],
+       ["Who decides how a data set is classified?", "Data owner", "Data custodian", "Data processor", "Data subject", "The owner is accountable."]] },
+  { n: "Risk management", t: [
+    ["Risk register", "List of identified risks with owners, ratings and responses."],
+    ["SLE", "Single loss expectancy: asset value times exposure factor."],
+    ["ARO", "Annualized rate of occurrence: how often per year."],
+    ["ALE", "Annualized loss expectancy: SLE times ARO."],
+    ["Risk appetite", "How much risk the organization is willing to accept."],
+    ["Accept", "Acknowledge the risk and do nothing more."],
+    ["Avoid", "Stop the activity that causes the risk."],
+    ["Transfer", "Shift the risk to another party, like insurance."],
+    ["Mitigate", "Reduce likelihood or impact with controls."],
+    ["Business impact analysis", "Identifies critical functions and the effect of their loss."]],
+   q: [["SLE is $50,000 and ARO is 0.5. What is the ALE?", "$25,000", "$100,000", "$50,000", "$5,000", "ALE = SLE x ARO."],
+       ["The company buys cyber insurance. Which response?", "Transfer", "Accept", "Avoid", "Mitigate", "Insurance shifts the financial risk."]] },
+  { n: "Third-party risk", t: [
+    ["Vendor assessment", "Evaluating a vendor's security before and during the relationship."],
+    ["Right-to-audit clause", "Contract term allowing you to audit the vendor."],
+    ["SLA", "Service level agreement: measurable service commitments like uptime."],
+    ["MOU", "Memorandum of understanding: informal agreement of intent."],
+    ["MSA", "Master service agreement: overall terms for future work."],
+    ["SOW", "Statement of work: specific deliverables and timeline."],
+    ["NDA", "Non-disclosure agreement protecting confidential information."],
+    ["BPA", "Business partners agreement describing a partnership's terms."]],
+   q: [["A contract guarantees 99.9% uptime. Which document?", "SLA", "MOU", "NDA", "BPA", "Measurable service commitments."],
+       ["You want the right to inspect a vendor's controls. What should the contract include?", "Right-to-audit clause", "NDA", "MOU", "Rules of engagement", "It permits audits."]] },
+  { n: "Compliance & privacy", t: [
+    ["GDPR", "EU privacy law covering personal data of people in the EU."],
+    ["HIPAA", "US law protecting health information (PHI)."],
+    ["PCI DSS", "Industry standard for protecting payment card data."],
+    ["SOX", "US law on financial reporting accuracy for public companies."],
+    ["Right to be forgotten", "A person's right to have their personal data erased."],
+    ["Data subject", "The person the personal data is about."],
+    ["Attestation", "Formal statement that controls are in place and working."],
+    ["Consequences of non-compliance", "Fines, sanctions, reputational damage and loss of license."]],
+   q: [["An online store handling credit cards must follow which standard?", "PCI DSS", "HIPAA", "SOX", "FERPA", "Payment card data."],
+       ["A customer asks a company to erase all their personal data. Which right?", "Right to be forgotten", "Data sovereignty", "Legal hold", "Attestation", "Erasure right under privacy laws."]] },
+  { n: "Audits & assessments", t: [
+    ["Internal audit", "Assessment by the organization's own staff."],
+    ["External audit", "Independent assessment by an outside party."],
+    ["Penetration test", "Authorized simulated attack to find exploitable weaknesses."],
+    ["Known environment", "Testers get full information (white box)."],
+    ["Partially known environment", "Testers get some information (gray box)."],
+    ["Unknown environment", "Testers get no information (black box)."],
+    ["Rules of engagement", "Defines the scope, timing and limits of a pen test."],
+    ["Passive reconnaissance", "Gathering information without touching the target, like OSINT."],
+    ["Active reconnaissance", "Directly probing the target, like port scanning."]],
+   q: [["Testers get no network diagrams or credentials. What test type?", "Unknown environment", "Known environment", "Partially known environment", "Internal audit", "Black box."],
+       ["What defines what testers may and may not do?", "Rules of engagement", "SLA", "NDA", "Risk register", "It sets scope and limits."]] },
+  { n: "Security awareness", t: [
+    ["Phishing campaign", "Simulated phishing to measure and train users."],
+    ["Anomalous behavior recognition", "Training users to spot unusual activity."],
+    ["Reporting", "Clear, easy way for users to report suspicious events."],
+    ["Password management", "Training on strong, unique passwords and password managers."],
+    ["Insider threat awareness", "Recognizing warning signs of risky insiders."],
+    ["Remote work security", "Securing home networks, devices and public Wi-Fi use."],
+    ["Situational awareness", "Noticing risks in the environment, like shoulder surfing."],
+    ["Metrics", "Tracking click rates and report rates to measure training impact."]],
+   q: [["How do you measure if phishing training is working?", "Track click and report rates", "Count firewall rules", "Check CVSS scores", "Review the SLA", "Metrics show behavior change."],
+       ["A user receives a suspicious email. What should training tell them to do?", "Report it", "Forward it to coworkers", "Reply to verify", "Delete it silently", "Reporting lets the SOC respond."]] }
+ ]}
+];
+
+const ACR = [["AAA","Authentication, Authorization, Accounting"],["ACL","Access Control List"],["AES","Advanced Encryption Standard"],["ALE","Annualized Loss Expectancy"],["APT","Advanced Persistent Threat"],["ARO","Annualized Rate of Occurrence"],["BIA","Business Impact Analysis"],["BPA","Business Partners Agreement"],["CA","Certificate Authority"],["CASB","Cloud Access Security Broker"],["CIA","Confidentiality, Integrity, Availability"],["CRL","Certificate Revocation List"],["CSR","Certificate Signing Request"],["CVE","Common Vulnerabilities and Exposures"],["CVSS","Common Vulnerability Scoring System"],["DKIM","DomainKeys Identified Mail"],["DLP","Data Loss Prevention"],["DMARC","Domain-based Message Authentication, Reporting and Conformance"],["EDR","Endpoint Detection and Response"],["HSM","Hardware Security Module"],["IaC","Infrastructure as Code"],["IDS","Intrusion Detection System"],["IPS","Intrusion Prevention System"],["MDM","Mobile Device Management"],["MFA","Multifactor Authentication"],["MOU","Memorandum of Understanding"],["MSA","Master Service Agreement"],["NAC","Network Access Control"],["NGFW","Next-Generation Firewall"],["OCSP","Online Certificate Status Protocol"],["OSINT","Open-Source Intelligence"],["PAM","Privileged Access Management"],["PHI","Protected Health Information"],["PII","Personally Identifiable Information"],["PKI","Public Key Infrastructure"],["RBAC","Role-Based Access Control"],["RPO","Recovery Point Objective"],["RTO","Recovery Time Objective"],["SAE","Simultaneous Authentication of Equals"],["SAML","Security Assertion Markup Language"],["SASE","Secure Access Service Edge"],["SCAP","Security Content Automation Protocol"],["SIEM","Security Information and Event Management"],["SLA","Service Level Agreement"],["SLE","Single Loss Expectancy"],["SOAR","Security Orchestration, Automation and Response"],["SOW","Statement of Work"],["SPF","Sender Policy Framework"],["SSO","Single Sign-On"],["TPM","Trusted Platform Module"],["UBA","User Behavior Analytics"],["WAF","Web Application Firewall"],["XDR","Extended Detection and Response"],["ZTNA","Zero Trust Network Access"]];
+
+/* ===================== ENGINE ===================== */
+let S = Object.assign({ xp: 0, clr: {}, best: 0 }, load());
+let V = { scr: "home", d: 0, mi: 0, i: 0, Q: [], qi: 0, ans: null, score: 0, mode: "", miss: {} };
+
+function load() { try { return JSON.parse(localStorage.getItem("sec801fs")) || {}; } catch (e) { return {}; } }
+function save() { try { localStorage.setItem("sec801fs", JSON.stringify(S)); } catch (e) {} }
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function pick(a, n) { return shuffle(a).slice(0, n); }
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+const TOTAL = DOM.reduce((n, d) => n + d.m.length, 0);
+function cleared() { return Object.keys(S.clr).length; }
+function domClr(d) { return DOM[d].m.filter((_, i) => S.clr[d + "-" + i]).length; }
+function rank() { const x = S.xp; return x >= 3000 ? "Security+ Ready" : x >= 2000 ? "Threat Hunter" : x >= 1200 ? "SOC Analyst" : x >= 600 ? "Blue Team Recruit" : x >= 200 ? "Packet Sniffer" : "Script Kiddie"; }
+
+/* Question builders: every question = { p: prompt, o: [options], a: correct index, x: explanation, tag: [d, mi] } */
+function mk(p, right, wrongs, x, tag) {
+  const o = shuffle([right].concat(wrongs));
+  return { p: p, o: o, a: o.indexOf(right), x: x, tag: tag };
+}
+function termQ(d, mi, k) {
+  const mod = DOM[d].m[mi], t = mod.t[k];
+  let pool = mod.t.filter((_, j) => j !== k).map(x => x[0]);
+  if (pool.length < 3) pool = pool.concat(DOM[d].m.flatMap(m => m.t.map(x => x[0])).filter(n => n !== t[0]));
+  return mk("Which term matches? " + t[1], t[0], pick(pool, 3), t[0] + ": " + t[1], [d, mi]);
+}
+function scenQ(d, mi, k) { const q = DOM[d].m[mi].q[k]; return mk(q[0], q[1], [q[2], q[3], q[4]], q[5], [d, mi]); }
+function moduleQs(d, mi) {
+  const m = DOM[d].m[mi];
+  return shuffle(m.t.map((_, k) => termQ(d, mi, k)).concat(m.q.map((_, k) => scenQ(d, mi, k))));
+}
+function anyQ(d) {
+  const mi = Math.floor(Math.random() * DOM[d].m.length), m = DOM[d].m[mi];
+  return Math.random() < 0.45 ? scenQ(d, mi, Math.floor(Math.random() * m.q.length)) : termQ(d, mi, Math.floor(Math.random() * m.t.length));
+}
+function weightedDomain() { let r = Math.random() * 100; for (let d = 0; d < DOM.length; d++) { r -= DOM[d].w; if (r < 0) return d; } return 3; }
+function examQs(n) {
+  const out = [];
+  DOM.forEach((dm, d) => { const k = Math.round(n * dm.w / 100); for (let i = 0; i < k; i++) out.push(anyQ(d)); });
+  return shuffle(out).slice(0, n);
+}
+function acrQ() {
+  const t = ACR[Math.floor(Math.random() * ACR.length)];
+  return mk("What does " + t[0] + " stand for?", t[1], pick(ACR.filter(x => x !== t).map(x => x[1]), 3), t[0] + " = " + t[1], null);
+}
+
+/* ===================== SCREENS ===================== */
+function B(cls, k, act, label, extra) { return '<button class="' + cls + '" data-k="' + k + '" data-act="' + act + '"' + (extra || "") + '>' + label + '</button>'; }
+const BACK = () => B("btn", "back", "back", "◀ back");
+function hud(right) { return '<div class="hud">' + (V.scr === "home" ? '<span>' + rank() + '</span>' : BACK()) + '<span>' + right + '</span></div>'; }
+
+function home() {
+  const items = [
+    ["camp", "Campaign", TOTAL + " modules · " + cleared() + " cleared", "#b388ff"],
+    ["rapid", "Rapid Fire", "15 mixed questions, weighted like the exam", "#00e5ff"],
+    ["exam", "Practice Exam", "45 questions · scored 100-900 · pass 750" + (S.best ? " · best " + S.best : ""), "#39ff14"],
+    ["acr", "Acronym Blitz", ACR.length + " acronyms · 15 per run", "#ff8a00"]];
+  return hud("XP " + S.xp) +
+    '<h1>SEC+ 801 // FULL SPECTRUM</h1><p class="tiny">Every SY0-801 topic area. Swipe to move, pinch to pick.</p>' +
+    '<div class="bar"><i style="width:' + Math.round(100 * cleared() / TOTAL) + '%"></i></div>' +
+    '<div class="menu">' + items.map((it, j) => B("mi", "h-" + it[0], "go", '<b style="color:' + it[3] + '">' + it[1] + '</b><small>' + it[2] + '</small>', ' data-to="' + it[0] + '" style="border-color:' + it[3] + '"' + (j === 0 ? " data-first" : ""))).join("") + '</div>';
+}
+
+function camp() {
+  return hud(cleared() + "/" + TOTAL + " cleared") + '<h1>Choose a domain</h1>' +
+    '<div class="menu" style="gap:8px">' + DOM.map((dm, d) => B("mi", "c" + d, "dom",
+      '<b style="color:' + dm.c + '">' + dm.name + '</b><small>' + dm.w + '% of exam · ' + domClr(d) + '/' + dm.m.length + ' modules cleared</small>',
+      ' data-d="' + d + '" style="border-color:' + dm.c + ';padding:8px 12px"' + (d === V.d ? " data-first" : ""))).join("") + '</div>';
+}
+
+function domain() {
+  const dm = DOM[V.d];
+  return hud(dm.w + "% of exam") + '<h2 style="color:' + dm.c + '">' + dm.name + '</h2>' +
+    '<div class="grid">' + dm.m.map((m, i) => B("mod", "m" + i, "mod", esc(m.n) + (S.clr[V.d + "-" + i] ? '<i style="color:' + dm.c + '">✓</i>' : ""),
+      ' data-i="' + i + '" style="border-color:' + dm.c + '"' + (i === 0 ? " data-first" : ""))).join("") + '</div>';
+}
+
+function intel() {
+  const dm = DOM[V.d], m = dm.m[V.mi], t = m.t[V.i], last = V.i === m.t.length - 1;
+  return hud("card " + (V.i + 1) + "/" + m.t.length) +
+    '<h2 style="color:' + dm.c + '">' + esc(m.n) + '</h2>' +
+    '<div class="card grow" style="border-color:' + dm.c + '"><h2 style="color:#fff;font-size:24px">' + esc(t[0]) + '</h2><p style="font-size:20px">' + esc(t[1]) + '</p></div>' +
+    '<div class="row">' + B("btn", "prev", "card", "◀ prev", ' data-dir="-1"') +
+    (last ? B("btn", "drill", "drill", "Start drill ▶", ' data-first style="border-color:#39ff14;color:#39ff14"') : B("btn", "next", "card", "next ▶", ' data-dir="1" data-first')) + '</div>' +
+    '<div class="row" style="justify-content:center">' + B("btn", "skip", "drill", "Skip to drill") + '</div>';
+}
+
+function quiz() {
+  const q = V.Q[V.qi], n = V.Q.length;
+  const titles = { drill: esc(DOM[V.d].m[V.mi].n), rapid: "Rapid Fire", exam: "Practice Exam", acr: "Acronym Blitz" };
+  const color = V.mode === "drill" ? DOM[V.d].c : (q.tag ? DOM[q.tag[0]].c : "#ff8a00");
+  const opts = q.o.map((o, j) => {
+    let cls = "opt";
+    if (V.ans !== null && V.mode !== "exam") { if (j === q.a) cls += " good"; else if (j === V.ans) cls += " bad"; }
+    if (V.ans !== null && V.mode === "exam" && j === V.ans) cls += " pick";
+    return B(cls, "o" + V.qi + "-" + j, "ans", esc(o), ' data-j="' + j + '"' + (j === 0 ? " data-first" : "") + (V.ans !== null ? " disabled" : ""));
+  }).join("");
+  let fb = "";
+  if (V.ans !== null) {
+    const ok = V.ans === q.a;
+    fb = '<div class="row"><p class="fb" style="color:' + (V.mode === "exam" ? "#9de" : (ok ? "#39ff14" : "#ff2bd6")) + '">' +
+      (V.mode === "exam" ? "Answer locked." : (ok ? "Correct. " : "Miss. ") + esc(q.x)) + '</p>' +
+      B("btn", "nx", "next", (V.qi === n - 1 ? "Results" : "Next") + " ▶", " data-af") + '</div>';
+  }
+  return hud(titles[V.mode] + " · " + (V.qi + 1) + "/" + n) +
+    '<div class="bar"><i style="width:' + Math.round(100 * V.qi / n) + '%"></i></div>' +
+    '<div class="card" style="border-color:' + color + '"><p style="font-size:' + (q.p.length > 150 ? 16 : 18) + 'px">' + esc(q.p) + '</p></div>' +
+    '<div>' + opts + '</div>' + fb;
+}
+
+function result() {
+  const n = V.Q.length, pct = Math.round(100 * V.score / n);
+  let head = "", sub = "", extra = "";
+  if (V.mode === "drill") {
+    const pass = pct >= 80;
+    head = pass ? "MODULE CLEARED" : "NOT YET";
+    sub = pass ? "Nice. " + esc(DOM[V.d].m[V.mi].n) + " is locked in." : "You need 80% to clear. Review the cards and run it again.";
+  } else if (V.mode === "exam") {
+    const scaled = Math.round(100 + 800 * V.score / n);
+    head = scaled + " / 900"; sub = scaled >= 750 ? "PASS. Exam-ready pace on this run." : "Below 750. Weak spots are listed below.";
+    const weak = Object.entries(V.miss).sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => { const t = e[0].split("-"); return esc(DOM[+t[0]].m[+t[1]].n) + " (" + e[1] + ")"; });
+    if (weak.length) extra = '<p class="tiny">Review: ' + weak.join(" · ") + '</p>';
+  } else { head = pct >= 80 ? "STRONG RUN" : "KEEP DRILLING"; sub = "Accuracy " + pct + "%."; }
+  return hud("results") +
+    '<div class="card" style="text-align:center;margin-top:20px"><p class="tiny">' + V.score + ' of ' + n + ' correct</p><h1 class="big" style="color:#fff;text-shadow:none">' + (V.mode === "exam" ? head : pct + "%") + '</h1>' +
+    (V.mode === "exam" ? "" : '<h2>' + head + '</h2>') + '<p>' + sub + '</p>' + extra + '</div>' +
+    '<div class="row">' + B("btn", "again", "again", "Run again", " data-af") + B("btn", "done", "back", "Done") + '</div>';
+}
+
+function screens() { return ({ home: home, camp: camp, domain: domain, intel: intel, quiz: quiz, result: result })[V.scr](); }
+
+/* ===================== NAVIGATION ===================== */
+function startQuiz(mode) {
+  V.mode = mode; V.qi = 0; V.ans = null; V.score = 0; V.miss = {};
+  V.Q = mode === "drill" ? moduleQs(V.d, V.mi) : mode === "rapid" ? Array.from({ length: 15 }, () => anyQ(weightedDomain())) : mode === "exam" ? examQs(45) : Array.from({ length: 15 }, acrQ);
+}
+function push(scr) { V.scr = scr; history.pushState({ scr: scr, d: V.d, mi: V.mi, mode: V.mode }, ""); render(true); }
+function back() { if (history.state && history.state.scr !== "home") history.back(); else { V.scr = "home"; render(true); } }
+window.addEventListener("popstate", e => {
+  const st = e.state || { scr: "home" };
+  V.d = st.d || 0; V.mi = st.mi || 0;
+  if (st.scr === "quiz" || st.scr === "result") { startQuiz(st.mode || "rapid"); V.scr = "quiz"; }
+  else if (st.scr === "intel") { V.i = 0; V.scr = "intel"; }
+  else V.scr = st.scr;
+  render(true);
+});
+
+function act(ds) {
+  switch (ds.act) {
+    case "back": back(); return;
+    case "go": if (ds.to === "camp") push("camp"); else { startQuiz(ds.to); push("quiz"); } return;
+    case "dom": V.d = +ds.d; push("domain"); return;
+    case "mod": V.mi = +ds.i; V.i = 0; push("intel"); return;
+    case "card": { const n = DOM[V.d].m[V.mi].t.length; V.i = (V.i + (+ds.dir) + n) % n; break; }
+    case "drill": startQuiz("drill"); V.scr = "quiz"; history.replaceState({ scr: "quiz", d: V.d, mi: V.mi, mode: "drill" }, ""); render(true); return;
+    case "ans": {
+      if (V.ans !== null) break;
+      V.ans = +ds.j; const q = V.Q[V.qi];
+      if (V.ans === q.a) { V.score++; S.xp += V.mode === "exam" ? 0 : 5; save(); }
+      else if (q.tag) { const k = q.tag.join("-"); V.miss[k] = (V.miss[k] || 0) + 1; }
+      break;
+    }
+    case "next":
+      if (V.qi < V.Q.length - 1) { V.qi++; V.ans = null; render(true); return; }
+      finishQuiz(); V.scr = "result"; history.replaceState({ scr: "result", d: V.d, mi: V.mi, mode: V.mode }, ""); render(true); return;
+    case "again": startQuiz(V.mode); V.scr = "quiz"; render(true); return;
+  }
+  render(false);
+}
+function finishQuiz() {
+  const pct = V.score / V.Q.length;
+  if (V.mode === "drill" && pct >= 0.8) { const k = V.d + "-" + V.mi; if (!S.clr[k]) { S.clr[k] = 1; S.xp += 50; } }
+  if (V.mode === "exam") { const sc = Math.round(100 + 800 * pct); if (sc > S.best) S.best = sc; S.xp += V.score * 5; }
+  save();
+}
+
+function render(fresh) {
+  const app = document.getElementById("app");
+  const prev = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.k : null;
+  app.innerHTML = screens();
+  const ok = el => el && !el.disabled;
+  let t = app.querySelector("[data-af]");
+  if (!ok(t) && !fresh && prev) t = app.querySelector('[data-k="' + prev + '"]');
+  if (!ok(t)) t = app.querySelector("[data-first]:not(:disabled)");
+  if (!ok(t)) t = app.querySelector("button:not(:disabled)");
+  if (t) t.focus({ preventScroll: true });
+}
+document.getElementById("app").addEventListener("click", e => { const t = e.target.closest("[data-act]"); if (t && !t.disabled) act(Object.assign({}, t.dataset)); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" || e.key === "Backspace") { e.preventDefault(); back(); } });
+
+history.replaceState({ scr: "home" }, "");
+render(true);
+</script>
+</body>
+</html>
